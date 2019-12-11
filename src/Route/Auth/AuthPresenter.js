@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import {Helmet} from "react-helmet";
 import Input from "../../Components/Input";
 import Button from "../../Components/Button";
 
@@ -59,26 +60,41 @@ export default ({
     <Wrapper>
             <Form>
                 {action === "logIn" && (
-                    <form onSubmit={onSubmit}>
-                    <Input placeholder={"Email"} {...email} type="email"/>
-                        <Button text={"Log In"}/>
-                    </form>
+                    <>
+                        <Helmet>
+                            <title>Log In | Prismagram</title>
+                        </Helmet>
+                        <form onSubmit={onSubmit}>
+                        <Input placeholder={"Email"} {...email} type="email"/>
+                            <Button text={"Log In"}/>
+                        </form>
+                    </>
                 )} 
                 {action === "signUp" && (
-                    <form onSubmit={onSubmit}>
-                        <Input placeholder={"First Name"} {...firstName}/>
-                        <Input placeholder={"Last Name"} {...lastName}/>
-                        <Input placeholder={"Email"} {...email} type="email"/>
-                        <Input placeholder={"Username"} {...username}/>
-                        <Button text={"Sign up"}/>
-                    </form>
+                    <>
+                        <Helmet>
+                            <title>Sign Up | Prismagram</title>
+                        </Helmet>
+                        <form onSubmit={onSubmit}>
+                            <Input placeholder={"First Name"} {...firstName}/>
+                            <Input placeholder={"Last Name"} {...lastName}/>
+                            <Input placeholder={"Email"} {...email} type="email"/>
+                            <Input placeholder={"Username"} {...username}/>
+                            <Button text={"Sign up"}/>
+                        </form>
+                    </>
                 )}
-                {action === "confirm" && <form onSubmit={onSubmit}>
-                    <Input placeholder="Paste your secret" required {...secret} />
-                    <Button text={"Confirm"}/>
-                </form>
-
-                }
+                {action === "confirm" && (
+                    <>
+                        <Helmet>
+                            <title>Confirm Secret | Prismagram</title>
+                        </Helmet>
+                        <form onSubmit={onSubmit}>
+                            <Input placeholder="Paste your secret" required {...secret} />
+                            <Button text={"Confirm"}/>
+                        </form>
+                    </>
+                )}
             </Form>
             {action !== "confirm" && (
                 <StateChanger>
