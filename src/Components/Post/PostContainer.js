@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import { useMutation, useQuery } from "react-apollo-hooks";
 import PostPresenter from "./PostPresenter";
 import useInput from "../../Hooks/useInput";
-import PropTypes from "prop-types";
+import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
+import { ME } from "../../SharedQueries";
+import { toast } from "react-toastify";
 
 const PostContainer = ({ 
     id, 
@@ -14,38 +18,88 @@ const PostContainer = ({
     caption,
     location
 }) => {
-    const [isLikedS, SetIsLiked] = useState(isLiked);
-    const [likeSountS, SetLikeCount] = useState(likeCount);
+    const [isLikedS, setIsLiked] = useState(isLiked);
+    const [likeCountS, setLikeCount] = useState(likeCount);
     const [currentItem, setCurrentItem] = useState(0);
+    const [selfComments, setSelfComments] = useState([]);
+    const { data: meQuery } = useQuery(ME);
+
     const comment = useInput("");
+
+    const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
+        variables: {
+            postId: id
+        }
+    });
+
+    const [addCommentMutation] = useMutation(ADD_COMMENT, {
+        variables: {
+            postId: id, text: comment.value
+        }
+    }) 
     
     const slide = () => {
         const totalFiles = files.length;
         if(currentItem === totalFiles - 1) {
-            setCurrentItem(0);
+            setTimeout(() => setCurrentItem(0), 3000);
         }
         else {
-            setCurrentItem(currentItem + 1);
+            setTimeout(() => setCurrentItem(currentItem + 1), 3000);
         }
     };
 
     useEffect(() => {
-        setInterval(slide, 2000);
+        slide();
     }, [currentItem]);
+
+    const toggleLike = async () => {
+        toggleLikeMutation();
+        if(isLikedS === true) {
+            setIsLiked(false);
+            setLikeCount(likeCountS - 1);
+        }
+        else {
+            setIsLiked(true);
+            setLikeCount(likeCountS + 1);
+        }
+    }
+
+    const onKeyPress = async e => {
+        const { which } = e;
+        if(which === 13) {
+            e.preventDefault();
+            
+            try {
+                const { data: { addComment } } = await addCommentMutation();
+                setSelfComments([
+                    ...selfComments, 
+                    // {id: Math.floor(Math.random * comment.length), text: comment.value, user: {username: meQuery.me.username} }
+                    addComment
+                ]);
+                comment.setValue("");
+            } catch (error) {
+                toast.error("Can't send comment..");
+            }
+        }
+        return ;
+    }
 
     return <PostPresenter 
         user={user}
         files={files}
         comments={comments}
         isLiked={isLikedS}
-        likeCount={likeSountS}
+        likeCount={likeCountS}
         createdAt={createdAt}
-        SetIsLiked={SetIsLiked}
-        SetLikeCount={SetLikeCount}
+        setIsLiked={setIsLiked}
+        setLikeCount={setLikeCount}
         newComment={comment}
         caption={caption}
         location={location}
         currentItem={currentItem}
+        toggleLike={toggleLike}
+        onKeyPress={onKeyPress}
+        selfComments={selfComments}
     />
 }
 
