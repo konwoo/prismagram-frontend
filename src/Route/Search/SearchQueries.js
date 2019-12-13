@@ -12,7 +12,7 @@ export const SEARCH = gql`
             avatar
             username
             isFollowing
-            isSelf
+            itSelf
         }
     }
 
