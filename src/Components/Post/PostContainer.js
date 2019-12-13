@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useMutation, useQuery } from "react-apollo-hooks";
+import { toast } from "react-toastify";
+import moment from "moment";
 import PostPresenter from "./PostPresenter";
 import useInput from "../../Hooks/useInput";
 import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
 import { ME } from "../../SharedQueries";
-import { toast } from "react-toastify";
 
 const PostContainer = ({ 
     id, 
@@ -22,6 +23,7 @@ const PostContainer = ({
     const [likeCountS, setLikeCount] = useState(likeCount);
     const [currentItem, setCurrentItem] = useState(0);
     const [selfComments, setSelfComments] = useState([]);
+    const [loadingComments, setLoadingComments] = useState(false);
     const { data: meQuery } = useQuery(ME);
 
     const comment = useInput("");
@@ -68,15 +70,17 @@ const PostContainer = ({
         const { which } = e;
         if(which === 13) {
             e.preventDefault();
-            
+            setLoadingComments(true);
             try {
                 const { data: { addComment } } = await addCommentMutation();
+                // const { data } = await addCommentMutation();
                 setSelfComments([
                     ...selfComments, 
-                    // {id: Math.floor(Math.random * comment.length), text: comment.value, user: {username: meQuery.me.username} }
-                    addComment
+                    {id: Math.floor(Math.random * comment.length), text: comment.value, user: {username: meQuery.me.username} }
+                    // addComment
                 ]);
                 comment.setValue("");
+                setLoadingComments(false);
             } catch (error) {
                 toast.error("Can't send comment..");
             }
@@ -90,7 +94,7 @@ const PostContainer = ({
         comments={comments}
         isLiked={isLikedS}
         likeCount={likeCountS}
-        createdAt={createdAt}
+        createdAt={moment(createdAt).fromNow()}
         setIsLiked={setIsLiked}
         setLikeCount={setLikeCount}
         newComment={comment}
@@ -100,6 +104,7 @@ const PostContainer = ({
         toggleLike={toggleLike}
         onKeyPress={onKeyPress}
         selfComments={selfComments}
+        loadingComments={loadingComments}
     />
 }
 

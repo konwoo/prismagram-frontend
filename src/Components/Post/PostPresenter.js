@@ -3,6 +3,7 @@ import styled from "styled-components";
 import TextAreaAuthosize from "react-textarea-autosize";
 import FatText from "../FatText";
 import Avatar from "../Avatar";
+import Indigator from "../Loading";
 import { Comment as CommentIcon, HeartEmpty, HeartFull } from "../Icons";
 
 
@@ -53,6 +54,10 @@ const File = styled.div`
 
 const Meta = styled.div`
     padding: 15px;
+`;
+
+const MetaCaption = styled.div`
+    padding-top: 10px;
 `;
 
 const Button = styled.button`
@@ -115,7 +120,8 @@ export default ({
     toggleLike,
     onKeyPress,
     comments,
-    selfComments
+    selfComments,
+    loadingComments
 }) => (
     <Post>
         <Header>
@@ -137,6 +143,10 @@ export default ({
             <Button> <CommentIcon /> </Button>
             </Buttons>
             <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
+                <MetaCaption>
+                    <text> {caption} </text>
+                </MetaCaption>
+            
             {comments && (
                 <Comments>
                     {
@@ -157,6 +167,9 @@ export default ({
                     }
                 </Comments>
             )}
+            {
+                loadingComments ? <Indigator /> : <div></div>
+            }
             <Timestamp>{createdAt}</Timestamp>
             <TextArea placeholder="Add a Comment..." value={newComment.value} onChange={newComment.onChange} onKeyPress={onKeyPress}/>
         </Meta>
