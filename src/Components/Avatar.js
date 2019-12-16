@@ -8,10 +8,10 @@ const getSize = size => {
         number = 30;
     }
     else if (size === "md") {
-        number = 50;
+        number = 60;
     }
     else if (size === "lg") {
-        number = 80;
+        number = 150;
     }
     return `
         width: ${number}px;
@@ -26,7 +26,12 @@ const Container = styled.div`
     border-radius: 50%;
 `;
 
-const Avatar = ({ size = "sm", url }) => <Container size={size} url={url} />
+const Avatar = ({ size = "sm", url, className }) => 
+    <Container
+        className={className}
+        size={size}
+        url={url} 
+    />
 
 Avatar.propTypes = {
     size: PropTypes.oneOf(["sm", "md", "lg"]),

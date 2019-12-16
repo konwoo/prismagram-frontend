@@ -5,6 +5,7 @@ import FatText from "../FatText";
 import Avatar from "../Avatar";
 import Indigator from "../Loading";
 import { Comment as CommentIcon, HeartEmpty, HeartFull } from "../Icons";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 
 const Post = styled.div`
@@ -12,6 +13,9 @@ const Post = styled.div`
     width: 100%;
     max-width: 600px;
     margin-bottom: 25px;
+    a {
+        color: inherit;
+    }
 `;
 
 const Header = styled.header`
@@ -127,7 +131,9 @@ export default ({
         <Header>
             <Avatar size="sm" url={avatar} />
             <UserColumn>
-                <FatText text={username}/>
+                <Link to={`/${username}`}>
+                    <FatText text={username}/>
+                </Link>
                 <Location>{location}</Location>
             </UserColumn>
         </Header>

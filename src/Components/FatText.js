@@ -2,13 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-const Text = styled.text`
+const Container = styled.h1`
     font-weight: 600;
     user-select: none;
 `;
 
 const FatText = ({ text, className }) => (
-    <Text className={className}>{text}</Text>
+    <Container className={className}>{text}</Container>
     );
 
 FatText.propTypes = {
