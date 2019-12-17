@@ -38,7 +38,7 @@ const PostContainer = ({
         variables: {
             postId: id, text: comment.value
         }
-    }) 
+    });
     
     const slide = () => {
         const totalFiles = files.length;

@@ -6,6 +6,7 @@ import Avatar from "../../Components/Avatar";
 import FatText from "../../Components/FatText";
 import FollowButton from "../../Components/FollowButton";
 import SquarePost from "../../Components/SquarePost";
+import Button from "../../Components/Button";
 
 const Wrapper = styled.div`
     min-height: 100vh;
@@ -52,7 +53,7 @@ const FullName = styled(FatText)`
 `;
 
 const Bio = styled.p`
-    margin: 10px;
+    margin: 10px 0px;
 `;
 
 const Posts = styled.div`
@@ -63,7 +64,7 @@ const Posts = styled.div`
 `;
 
 
-export default ({ loading, data }) => {
+export default ({ loading, data, logOut, onClick }) => {
     if(loading === true) {
         
         return (
@@ -88,17 +89,21 @@ export default ({ loading, data }) => {
         } } = data;
         return (
             <Wrapper>
+                <Helmet>
+                    <title>{username} | Prismagram </title>
+                </Helmet>
                 <Header>
-                    <Helmet>
-                        <title>{username} | Prismagram </title>
-                    </Helmet>
                     <HeaderColumn>
                         <Avatar size="lg" url={avatar} />
                     </HeaderColumn>
                     <HeaderColumn>
                         <UsernameRow>
                             <Username>{username}</Username> {" "}
-                            { !itSelf && <FollowButton id={id} isFollowing={isFollowing} /> }
+                            { itSelf ? (
+                                <Button onClick={logOut} text="logOut" />
+                                ) : (
+                                    <FollowButton id={id} isFollowing={isFollowing} />
+                                    )}
                         </UsernameRow>
                         <Counts>
                             <Count>
@@ -123,6 +128,8 @@ export default ({ loading, data }) => {
                                     likeCount={post.likeCount}
                                     commentCount={post.commentCount}
                                     file={post.files[0]}
+                                    username={username}
+                                    onClick={() => onClick(post.id)}
                                 />
                     ))}
                 </Posts>
